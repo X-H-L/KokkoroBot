@@ -1,15 +1,18 @@
+import base64
 import os
 import time
-import base64
 from collections import defaultdict
+
+from hoshino import aiorequests, config, util
+
+from .. import chara
+from . import sv
+
 try:
     import ujson as json
 except:
     import json
 
-from hoshino import aiorequests, util
-from . import sv
-from ..chara import Chara
 
 logger = sv.logger
 
@@ -44,8 +47,8 @@ def dump_db():
     with open(DB_PATH, 'w', encoding='utf8') as f:
         json.dump(j, f, ensure_ascii=False)
 
-def get_like_num(id_):
-    return len(DB.get(id_, {}).get('like', set()))
+def get_likes(id_):
+    return DB.get(id_, {}).get('like', set())
 
 def add_like(id_, uid):
     e = DB.get(id_, {})
@@ -57,8 +60,8 @@ def add_like(id_, uid):
     e['dislike'] = k
     DB[id_] = e
 
-def get_dislike_num(id_):
-    return len(DB.get(id_, {}).get('dislike', set()))
+def get_dislikes(id_):
+    return DB.get(id_, {}).get('dislike', set())
 
 def add_dislike(id_, uid):
     e = DB.get(id_, {})
@@ -103,8 +106,7 @@ def get_true_id(quick_key:str, user_id:int) -> str:
 
 
 def __get_auth_key():
-    config = util.load_config(__file__)
-    return config["AUTH_KEY"]
+    return config.priconne.arena.AUTH_KEY
 
 
 async def do_query(id_list, user_id, region=1):
@@ -116,7 +118,7 @@ async def do_query(id_list, user_id, region=1):
     payload = {"_sign": "a", "def": id_list, "nonce": "a", "page": 1, "sort": 1, "ts": int(time.time()), "region": region}
     logger.debug(f'Arena query {payload=}')
     try:
-        resp = await aiorequests.post('https://api.pcrdfans.com/x/v1/search', headers=header, json=payload)
+        resp = await aiorequests.post('https://api.pcrdfans.com/x/v1/search', headers=header, json=payload, timeout=10)
         res = await resp.json()
         logger.debug(f'len(res)={len(res)}')
     except Exception as e:
@@ -127,18 +129,22 @@ async def do_query(id_list, user_id, region=1):
         logger.error(f"Arena query failed.\nResponse={res}\nPayload={payload}")
         return None
 
-    res = res['data']['result']
-    res = [
-        {
-            'qkey': gen_quick_key(entry['id'], user_id),
-            'atk': [ Chara(c['id'] // 100, c['star'], c['equip']) for c in entry['atk'] ],
+    ret = []
+    for entry in res['data']['result']:
+        eid = entry['id']
+        likes = get_likes(eid)
+        dislikes = get_dislikes(eid)
+        ret.append({
+            'qkey': gen_quick_key(eid, user_id),
+            'atk': [ chara.fromid(c['id'] // 100, c['star'], c['equip']) for c in entry['atk'] ],
             'up': entry['up'],
             'down': entry['down'],
-            'my_up': get_like_num(entry['id']),
-            'my_down': get_dislike_num(entry['id'])
-        } for entry in res
-    ]
-    return res
+            'my_up': len(likes),
+            'my_down': len(dislikes),
+            'user_like': 1 if user_id in likes else -1 if user_id in dislikes else 0
+        })
+
+    return ret
 
 
 async def do_like(qkey, user_id, action):
