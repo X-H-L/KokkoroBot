@@ -53,19 +53,20 @@ async def get_image_from_msg(message: str):
         try:
             save_path = os.path.join(bot.config.CQ_DATA_PATH,'image')
             filename = re.findall(r'(?<=-)[^-]*?(?=/)',url)[0]+'.jpg'
-            filename = os.path.join(save_path,filename)
+            filename = os.path.join(save_path, filename)
             timeout = aiohttp.ClientTimeout(total=30)
             async with aiohttp.ClientSession(timeout=timeout) as session:
-                async with  session.get(url) as resp:
+                async with session.get(url) as resp:
                     content = await resp.read()
                     with open(filename,'wb') as f:
                         f.write(content)
                         f.close()
         except Exception as ex:
             print(ex)
-    url_list = re.findall(r'http.*?term=\d',message)
+
+    url_list = re.findall(r'http.*?term=\d', message)
     for url in url_list:
-        print('url',url)
+        print('url', url)
         asyncio.run_coroutine_threadsafe(download(url),loop=bot.loop)
 
 @sv.on_message('group')
@@ -155,7 +156,7 @@ async def handle(bot, context):
             return
     elif message == ('查看qa') or message == ('查看QA'):
         if priv.check_priv(context, priv.SUPERUSER):
-            gid = context.get('group_id',1)
+            gid = context.get('group_id', 1)
             msg = [f"群{gid}问答一览："]
             i=0
             for b in Question.select().where(Question.rep_group == context['group_id']).order_by(Question.rep_member):
@@ -169,8 +170,8 @@ async def handle(bot, context):
                     if name == '':
                         name = info['nickname']
                     name += '(' + str(info['user_id']) + ')'
-                msg.append(f"{name}:{b.quest}|{b.answer}")  
-                if i%10==0:
+                msg.append(f"{name}:{b.quest}|{b.answer}")
+                if i % 10 == 0:
                     await bot.send(context, '\n'.join(msg), at_sender=False)
                     msg = [f"第{(i//10)+1}页："]
             await bot.send(context, '\n'.join(msg), at_sender=False)
@@ -190,6 +191,7 @@ async def answer(bot, context):
             if a:
                 await bot.send(context, f'{a}', at_sender=False)
                 return
+
 
 def init():
     if not os.path.exists(os.path.join(os.path.dirname(__file__), 'qa.db')):
