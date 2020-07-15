@@ -194,6 +194,24 @@ class Service:
         return deco
 
 
+    """
+    def on_message(self, event='group') -> Callable:
+        def deco(func) -> Callable:
+            @wraps(func)
+            async def wrapper(ctx):
+                if self._check_all(ctx):
+                    try:
+                        return await func(self.bot, ctx)
+                    except Exception as e:
+                        self.logger.error(f'{type(e)} occured when {func.__name__} handling message {ctx["message_id"]}.')
+                        self.logger.exception(e)
+                    return
+            return self.bot.on_message(event)(wrapper)
+        return deco
+    TODO:得想个办法整一个更好的正则装饰器
+    """
+
+    
     def on_prefix(self, prefix, only_to_me=False) -> Callable:
         if isinstance(prefix, str):
             prefix = (prefix, )

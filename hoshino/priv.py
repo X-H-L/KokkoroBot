@@ -9,6 +9,7 @@ PRIVATE = 10
 ADMIN = 21
 OWNER = 22
 WHITE = 51
+PYUSER = 100
 SUPERUSER = 999
 
 from datetime import datetime
@@ -51,6 +52,8 @@ def get_user_priv(ev: CQEvent):
     uid = ev.user_id
     if uid in hoshino.config.SUPERUSERS:
         return SUPERUSER
+    if uid in hoshino.config.PYUSERS:
+        return PYUSER
     if check_block_user(uid):
         return BLACK
     # TODO: White list

@@ -1,4 +1,4 @@
-# Config Files
+﻿# Config Files
 config.py
 config.json
 hoshino/config/
@@ -9,8 +9,8 @@ db.json
 database.json
 *.db
 *.sqlite
-res/
-img/
+# res/
+# img/
 imgs/
 image/
 images/

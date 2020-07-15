@@ -5,6 +5,7 @@ from hoshino import Service
 from hoshino.typing import CQEvent
 
 sv = Service('dice', help_='''
+简易骰娘
 [.r] 掷骰子
 [.r 3d12] 掷3次12面骰子
 '''.strip())

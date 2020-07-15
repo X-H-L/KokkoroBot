@@ -3,7 +3,7 @@ from hoshino import Service, R
 from hoshino.typing import CQEvent
 from hoshino.util import DailyNumberLimiter
 
-sv = Service('pcr-login-bonus', bundle='pcr娱乐', help_='[星乃签到] 给主さま盖章章')
+sv = Service('pcr-login-bonus', bundle='pcr娱乐', help_='[@签到] 给主さま盖章章')
 
 lmt = DailyNumberLimiter(1)
 login_presents = [
@@ -43,7 +43,7 @@ todo_list = [
     '搓一把日麻'
 ]
 
-@sv.on_fullmatch(('签到', '盖章', '妈', '妈?', '妈妈', '妈!', '妈！', '妈妈！'), only_to_me=True)
+@sv.on_fullmatch(('签到', '盖章', '妈', '妈?', '妈妈', '妈!', '妈！', '妈妈！', '盖章章'), only_to_me=True)
 async def give_okodokai(bot, ev: CQEvent):
     uid = ev.user_id
     if not lmt.check(uid):

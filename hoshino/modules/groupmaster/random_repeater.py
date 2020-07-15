@@ -1,12 +1,12 @@
 import random
-
+import re
 import hoshino
 from hoshino import Service
 from hoshino.typing import CQEvent, CQHttpError
 
 sv = Service('random-repeater', help_='随机复读机')
 
-PROB_A = 1.4
+PROB_A = 1.5
 group_stat = {}     # group_id: (last_msg, is_repeated, p)
 
 '''
@@ -29,17 +29,30 @@ async def random_repeater(bot, ev: CQEvent):
     last_msg, is_repeated, p = group_stat[group_id]
     if last_msg == msg:     # 群友正在复读
         if not is_repeated:     # 机器人尚未复读过，开始测试复读
-            if random.random() < p:    # 概率测试通过，复读并设flag
+            if random.random() < p+0.0001:    # 概率测试通过，复读并设flag
                 try:
                     group_stat[group_id] = (msg, True, 0)
-                    await bot.send(ev, msg)
+                    ''' # if random.random() < 0.5:
+                    matchObj = re.match(r'^\[CQ:image,file=([^\[\]]+)\]$', msg)
+                    if matchObj is not None:
+                        await bot.send(ev, '单图片')
+                    el '''
+                    if random.random() < 0.5:
+                        await bot.send(ev, msg)
+                    elif random.random() < 0.5:
+                        await bot.send(ev, '不许复读！')
                 except CQHttpError as e:
                     hoshino.logger.error(f'复读失败: {type(e)}')
             else:                      # 概率测试失败，蓄力
                 p = 1 - (1 - p) / PROB_A
                 group_stat[group_id] = (msg, False, p)
     else:   # 不是复读，重置
-        group_stat[group_id] = (msg, False, 0)
+        if random.random() < 0.0001:
+            if random.random() < 0.5:
+                await bot.send(ev, msg)
+                group_stat[group_id] = (msg, True, 0)
+        else:
+            group_stat[group_id] = (msg, False, 0)
 
 
 def _test_a(a):
@@ -51,3 +64,6 @@ def _test_a(a):
     for _ in range(10):
         p0 = (p0 - 1) / a + 1
         print(p0)
+
+
+# def _repeater(bot, ev: CQEvent,)

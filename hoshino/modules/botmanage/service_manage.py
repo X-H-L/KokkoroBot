@@ -8,7 +8,7 @@ from hoshino import Service, priv
 
 PRIV_TIP = f'群主={priv.OWNER} 群管={priv.ADMIN} 群员={priv.NORMAL} bot维护组={priv.SUPERUSER}'
 
-@on_command('lssv', aliases=('服务列表', '功能列表'), permission=perm.GROUP_ADMIN, only_to_me=False, shell_like=True)
+@on_command('lssv', aliases=('服务列表', '功能列表'), permission=perm.GROUP_ADMIN, only_to_me=True, shell_like=True)
 async def lssv(session:CommandSession):
     parser = ArgumentParser(session=session)
     parser.add_argument('-a', '--all', action='store_true')
@@ -37,11 +37,11 @@ async def lssv(session:CommandSession):
     await session.send('\n'.join(msg))
 
 
-@on_command('enable', aliases=('启用', '开启', '打开'), permission=perm.GROUP, only_to_me=False)
+@on_command('enable', aliases=('启用', '开启', '打开'), permission=perm.GROUP, only_to_me=True)
 async def enable_service(session:CommandSession):
     await switch_service(session, turn_on=True)
 
-@on_command('disable', aliases=('禁用', '关闭'), permission=perm.GROUP, only_to_me=False)
+@on_command('disable', aliases=('禁用', '关闭'), permission=perm.GROUP, only_to_me=True)
 async def disable_service(session:CommandSession):
     await switch_service(session, turn_on=False)
 

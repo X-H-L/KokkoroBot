@@ -6,8 +6,8 @@ from . import sv
 
 lmt = FreqLimiter(5)
 
-@sv.on_suffix(('是谁', '是誰'))
-@sv.on_prefix(('谁是', '誰是'))
+@sv.on_suffix(('是谁', '是誰'), only_to_me=True)
+@sv.on_prefix(('谁是', '誰是'), only_to_me=True)
 async def whois(bot, ev: CQEvent):
     uid = ev.user_id
     if not lmt.check(uid):
@@ -28,9 +28,9 @@ async def whois(bot, ev: CQEvent):
     msg = ''
     if confi < 100:
         lmt.start_cd(uid, 120)
-        msg = f'兰德索尔似乎没有叫"{name}"的人...\n角色别称补全计划: github.com/Ice-Cirno/HoshinoBot/issues/5'
+        msg = f'umm……兰德索尔似乎没有叫"{name}"的人...\n角色别称补全计划: github.com/Ice-Cirno/HoshinoBot/issues/5'
         await bot.send(ev, msg)
-        msg = f'\n您有{confi}%的可能在找{guess_name} '
+        msg = f'\n主人是在找{guess_name}吗（{confi}%）'
 
     if confi > 60:
         msg += f'{c.icon.cqcode} {c.name}'

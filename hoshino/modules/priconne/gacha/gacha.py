@@ -41,18 +41,23 @@ class Gacha(object):
         total_ = s3_prob + s2_prob + s1_prob
         pick = random.randint(1, total_)
         if pick <= up_prob:
-            return chara.fromname(random.choice(self.up), 3), 100
+            return chara.fromname(random.choice(self.up), 3), 100  #, 'up'
         elif pick <= s3_prob:
-            return chara.fromname(random.choice(self.star3), 3), 50
+            return chara.fromname(random.choice(self.star3), 3), 50  #, 's3'
         elif pick <= s2_prob + s3_prob:
-            return chara.fromname(random.choice(self.star2), 2), 10
+            return chara.fromname(random.choice(self.star2), 2), 10  #, 's2'
         else:
-            return chara.fromname(random.choice(self.star1), 1), 1
+            return chara.fromname(random.choice(self.star1), 1), 1  #, 's1'
 
 
     def gacha_ten(self):
         result = []
         hiishi = 0
+        resultcheck = {'up': [], 's3': [], 's2': [], 's1': []}
+        resultcheck['up'] = 0
+        resultcheck['s3'] = 0
+        resultcheck['s2'] = 0
+        resultcheck['s1'] = 0
         up = self.up_prob
         s3 = self.s3_prob
         s2 = self.s2_prob
@@ -61,15 +66,35 @@ class Gacha(object):
             c, y = self.gacha_one(up, s3, s2, s1)
             result.append(c)
             hiishi += y
+            if 100 == y:
+                resultcheck['up'] += 1
+            elif 50 == y:
+                resultcheck['s3'] += 1
+            elif 10 == y:
+                resultcheck['s2'] += 1
+            elif 1 == y:
+                resultcheck['s1'] += 1
+            else:
+                pass    # should never reach here
         c, y = self.gacha_one(up, s3, s2 + s1, 0)    # 保底第10抽
         result.append(c)
         hiishi += y
+        if 100 == y:
+            resultcheck['up'] += 1
+        elif 50 == y:
+            resultcheck['s3'] += 1
+        elif 10 == y:
+            resultcheck['s2'] += 1
+        elif 1 == y:
+            resultcheck['s1'] += 1
+        else:
+            pass
 
-        return result, hiishi
+        return result, hiishi, resultcheck
 
 
     def gacha_tenjou(self):
-        result = {'up': [], 's3': [], 's2':[], 's1':[]}
+        result = {'up': [], 's3': [], 's2': [], 's1': []}
         first_up_pos = 999999
         up = self.up_prob
         s3 = self.s3_prob
