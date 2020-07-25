@@ -3,7 +3,6 @@ from datetime import datetime
 from hoshino import Service
 from PIL import Image, ImageFont, ImageDraw
 import base64
-#config_path = os.path.dirname(__file__)+'/config.json'
 sv = Service('nowtime', enable_on_default=True, help_='[@报时] 看看现在几点')
 
 @sv.on_keyword(('报时', '现在几点', '几点钟啦', '几点啦'), only_to_me=True)

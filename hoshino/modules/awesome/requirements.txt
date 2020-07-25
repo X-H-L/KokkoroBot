@@ -1,0 +1,13 @@
+wheel
+nltk
+nonebot
+jieba
+aiohttp
+aiocqhttp
+requests
+numpy
+pyahocorasick
+httpx
+beautifulsoup4
+pillow
+scikit_learn

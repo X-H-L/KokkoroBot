@@ -90,11 +90,6 @@ async def chat_cao3(bot, ev):
         await bot.send(ev, '该除草了吗')
 
 
-""" @sv.on_fullmatch((''))
-async def chat_(bot, ev):
-    await bot.send(ev, R.img('geng/').cqcode) """
-
-
 @sv.on_fullmatch(('已经很晚了'))
 async def chat_gaishuile(bot, ev):
     await bot.send(ev, R.img('kkl/gaishuile.jpg').cqcode)
@@ -102,7 +97,7 @@ async def chat_gaishuile(bot, ev):
 
 @sv.on_fullmatch(('会战警察来了'))
 async def chat_huizhanjingcha(bot, ev):
-    await bot.send(ev, R.img('geng/会战警察{random.randint(1, 3)}.jpg').cqcode)
+    await bot.send(ev, R.img(f'geng/会战警察{random.randint(1, 3)}.jpg').cqcode)
 
 
 @sv.on_fullmatch(('xp调查', 'xp调研'), only_to_me=True)
@@ -152,7 +147,7 @@ async def chat_nimenhao(bot, ev):
         await bot.send(ev, R.img('taowa/nimenhao.jpg').cqcode)
 
 
-@sv.on_fullmatch(('你们好', '你们好啊'))
+@sv.on_fullmatch(('不要以为这样就赢了'))
 async def chat_woshule(bot, ev):
     if random.random() < 0.5:
         await bot.send(ev, R.img('taowa/不要以为这样就赢了.jpg').cqcode)
@@ -419,7 +414,7 @@ async def chat_yinyang(bot, ev):
 
 @sv.on_rex(r'^(兰德索尔)?最([强弱])[7七]人$', only_to_me=True)
 async def chat_zui7ren(bot, ev):
-    pos = ev.match.group(2)
+    pos = ev['match'].group(2)
     if '强' in pos:
         await bot.send(ev, R.img('priconne/tips/zuiqian7.jpg').cqcode)
     elif '弱' in pos:
@@ -446,10 +441,9 @@ async def chat_caiquan2(bot, ev):
 
 # =====================keyword======================= #
 
-
-@sv.on_command('快捷回复', only_to_me=True)
-async def kuaijiehuifu(session: CommandSession):
-    s = session.current_arg_text
+@sv.on_prefix('快捷回复', only_to_me=True)
+async def kuaijiehuifu(bot, ev):
+    s = ev.message.extract_plain_text().strip()
     msg = ["快捷回复"]
     if not s:
         msg.append("现在的快捷回复有\n哦\n漏刀\n沉船\n狗叫\n快开车\n会战")
@@ -468,4 +462,4 @@ async def kuaijiehuifu(session: CommandSession):
     else:
         msg.append("现在的快捷回复有\n哦\n漏刀\n沉船\n狗叫\n快开车\n会战")
         # return
-    await session.send('\n'.join(msg))  
+    await bot.send(ev, '\n'.join(msg))

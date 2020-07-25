@@ -2,7 +2,6 @@ import itertools
 from hoshino import util, R
 from hoshino.typing import CQEvent
 from . import sv
-import random
 if_ta1 = True
 rta_1 = R.img('priconne/quick/rta1.png').cqcode
 if_ta2 = True
@@ -11,37 +10,42 @@ if_tf1 = True
 rtq_1 = R.img('priconne/quick/rtq1.png').cqcode
 rtz_1 = R.img('priconne/quick/rtz1.png').cqcode
 rth_1 = R.img('priconne/quick/rth1.png').cqcode
-if_tf2 = False
+if_tf2 = True
 rtq_2 = R.img('priconne/quick/rtq2.png').cqcode
 rtz_2 = R.img('priconne/quick/rtz2.png').cqcode
 rth_2 = R.img('priconne/quick/rth2.png').cqcode
 rjq = R.img('priconne/quick/rjq.png').cqcode
 rjz = R.img('priconne/quick/rjz.png').cqcode
 rjh = R.img('priconne/quick/rjh.png').cqcode
-if_b = False
-rba = R.img('priconne/quick/rba.jpg').cqcode
-jpRankn = '17-3'
-twRankn = '16-4'
-bRankn = '8-3'
+if_b = True
+rba = R.img('priconne/quick/rba.png').cqcode
+jpRankn = '17-5'
+twRankn = '16-5'
+bRankn = '9-5'
 
-
+ATIP='※建议加入前中后精准定位，eg：#台前rank'
 @sv.on_rex(r'^(\*?([日台国陆b])服?([前中后]*)卫?)?rank(表|推荐|指南)?$', only_to_me=True)
 async def rank_sheet(bot, ev):
     match = ev['match']
     is_jp = match.group(2) == '日'
     is_tw = match.group(2) == '台'
-    is_cn = match.group(2) in '国陆b'
+    if match.group(2) is not None:
+        is_cn = match.group(2) in '国陆b'
+    else:
+        is_cn = False
     if not is_jp and not is_tw and not is_cn:
         await bot.send(ev,
-                       '\n请问您要查询哪个服务器的rank表？\n*日rank表\n*台rank表\n*B服rank表\n',
+                       f'\n请问您要查询哪个服务器的rank表？\n*#日rank表\n*#台rank表\n*#B服rank表\n{ATIP}',
                        at_sender=True)
         return
     msg = [
         '\n※表格仅供参考，升r有风险，强化需谨慎',
     ]
+    pos = match.group(3)
+    if not (pos or is_cn):
+        msg.append(ATIP)
     if is_jp:
         msg.append(f'※不定期搬运自图中群号\n※图中广告为原作者推广，与本bot无关\nR{jpRankn} rank表：')
-        pos = match.group(3)
         if not pos or '前' in pos:
             msg.append(str(rjq))
         if not pos or '中' in pos:
@@ -79,8 +83,10 @@ async def rank_sheet(bot, ev):
                 '\n※B服当前仅开放至金装，r10前无需考虑卡rank\n※暂未发现公开的靠谱rank推荐表\n※装备强化消耗较多mana，如非前排建议不强化\n※关于卡r的原因可发送"bcr速查"研读【为何卡R卡星】一帖',
                 at_sender=True)
         else:
-            await bot.send(ev, str(rba))
-        # await util.silence(ev, 60)
+            msg.append(f'R{bRankn} rank表：')
+            msg.append(str(rba))
+            await bot.send(ev, '\n'.join(msg), at_sender=True)
+            await util.silence(ev, 60)
 
 
 @sv.on_rex(r'^(兰德索尔|pcr)?(年龄|胸围|学业|胸部|岁数|欧派|大小)(统计|分布|表)表?$', only_to_me=True)
@@ -96,17 +102,12 @@ async def pcrfenbubiao(bot, ev):
         await bot.send(ev, R.img('priconne/tips/xueniantuice.jpg').cqcode)
 
 
-@sv.on_fullmatch(('furry', 'furry分级', '喜欢羊驼很怪吗', '喜欢羊驼有多怪'), only_to_me=True)
+@sv.on_fullmatch(('jjc', 'JJC', 'JJC作业', 'JJC作业网', 'JJC数据库', 'jjc作业', 'jjc作业网', 'jjc数据库','JJC作業', 'JJC作業網', 'JJC數據庫', 'jjc作業', 'jjc作業網', 'jjc數據庫'))
 async def furryrank(bot, ev):
-    await bot.send(
-        ev,
-        '公主连接Re:Dive 竞技场编成数据库\n日文：https://nomae.net/arenadb \n中文：https://pcrdfans.com/battle'
-    )
+    await bot.send(ev,'公主连接Re:Dive 竞技场编成数据库\n日文：https://nomae.net/arenadb \n中文：https://pcrdfans.com/battle')
 
 
-@sv.on_fullmatch(
-    ('jjc', 'JJC', 'JJC作业', 'JJC作业网', 'JJC数据库', 'jjc作业', 'jjc作业网', 'jjc数据库',
-     'JJC作業', 'JJC作業網', 'JJC數據庫', 'jjc作業', 'jjc作業網', 'jjc數據庫'))
+@sv.on_fullmatch(('furry', 'furry分级', '喜欢羊驼很怪吗', '喜欢羊驼有多怪'), only_to_me=True)
 async def say_arina_database(bot, ev):
     await bot.send(ev, R.img('priconne/tips/furry.jpg').cqcode)
 
@@ -114,6 +115,8 @@ async def say_arina_database(bot, ev):
 OTHER_KEYWORDS = '【日rank】【台rank】【b服rank】【jjc作业网】【黄骑充电表】【一个顶俩】【多目标boss机制】【pcr公式】'
 PCR_SITES = f'''
 【繁中wiki/兰德索尔图书馆】pcredivewiki.tw
+【体力规划工具/可可萝笔记】https://kokkoro-notes.lolita.id/#
+【刷图规划工具/quest-helper】https://expugn.github.io/priconne-quest-helper/
 【日文wiki/GameWith】gamewith.jp/pricone-re
 【日文wiki/AppMedia】appmedia.jp/priconne-redive
 【竞技场作业库(中文)】pcrdfans.com/battle

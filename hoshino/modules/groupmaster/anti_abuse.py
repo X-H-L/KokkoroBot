@@ -4,7 +4,6 @@
 import random
 from datetime import timedelta
 
-import nonebot
 from nonebot import Message, MessageSegment, message_preprocessor, on_command
 from nonebot.message import _check_calling_me_nickname
 
@@ -80,4 +79,6 @@ async def ban_word(session):
     hoshino.priv.set_block_user(user_id, timedelta(hours=8))
     pic = R.img(f"kkl/badword{random.randint(1, 4)}.jpg").cqcode
     await session.send(f"不理你啦！バーカー\n{pic}", at_sender=True)
-    await util.silence(session.ctx, 8*60*60)
+    await util.silence(session.ctx, 8*60*60, skip_su=False)
+
+

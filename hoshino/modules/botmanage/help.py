@@ -5,7 +5,7 @@ sv = Service('_help_', manage_priv=priv.SUPERUSER, visible=False)
 
 TOP_MANUAL = '''
 =====================
-- HoshinoBot使用说明 -
+- HoshinoBot-Kokkoro Edition ver 1.01-
 =====================
 输入方括号[]内的关键词即可触发相应的功能
 ※注意其中的【空格】不可省略！
@@ -15,7 +15,7 @@ TOP_MANUAL = '''
 [@怎么拆日和] 竞技场查询
 [@来发十连] 转蛋模拟
 [@妈/盖章] 给主さま盖章章
-[pcr速查] 常用网址
+[@pcr速查] 常用网址
 [@rank] 查看rank推荐表
 [#公会战作业] 会战时更新，有作业请私聊蓝红心
 [#活动作业] 活动时更新，有作业请私聊蓝红心
@@ -24,17 +24,17 @@ TOP_MANUAL = '''
 [@来杯咖啡] 骚扰蓝红心
 =====================
 ☟发送以下关键词查看更多：
-[@帮助pcr会战]这个是hoshino的，暂时不开
-[@帮助pcr查询]
-[@帮助pcr娱乐]
-[@帮助pcr订阅]
-[@帮助kancolle]没开
-[@帮助通用]
-[@帮助表情包制作] 制图相关功能
-[@帮助关键词回复图片] 列出可能会回复图片的关键词
-[@帮助game] 一些小游戏的说明
-[@帮助pixiv] 搜图插件的指令说明，随机图也在这里
-[@帮助其他]其他
+[@helppcr会战]这个是hoshino的，暂时不开
+[@helppcr查询]
+[@helppcr娱乐]
+[@helppcr订阅]
+[@helpkancolle]没开
+[@help通用]
+[@help表情包制作] 制图相关功能
+[@help关键词回复图片] 列出可能会回复图片的关键词
+[@helpgame] 一些小游戏的说明
+[@helppixiv] 搜图插件的指令说明，随机图也在这里
+[@help其他]其他
 ========
 ※除这里中写明外 另有其他隐藏功能:)
 ※隐藏功能属于赠品 不保证可用性
@@ -56,7 +56,7 @@ def gen_bundle_manual(bundle_name, service_list, gid):
     return '\n'.join(manual)
 
 
-@sv.on_prefix(('help', '帮助', '幫助'), only_to_me=True)
+@sv.on_prefix(('help'), only_to_me=True)
 async def send_help(bot, ev: CQEvent):
     bundle_name = ev.message.extract_plain_text().strip()
     bundles = Service.get_bundles()
