@@ -5,7 +5,7 @@ from PIL import Image, ImageFont, ImageDraw
 import base64
 sv = Service('nowtime', enable_on_default=True, help_='[@报时] 看看现在几点')
 
-@sv.on_keyword(('报时', '现在几点', '几点钟啦', '几点啦'), only_to_me=True)
+@sv.on_keyword(('报时', '几点了', '现在几点', '几点钟啦', '几点啦'), only_to_me=True)
 async def showtime(bot, ev):
     now = datetime.now()
     hour = now.hour

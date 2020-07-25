@@ -50,13 +50,19 @@ class MYfavor(pw.Model):
     class Meta:
         database = db
 
-
+@sv.on_prefix('把库扬了', only_to_me=True)
+async def shanku(bot, ev: CQEvent):
+    if not priv.check_priv(ev, priv.SUPERUSER):
+        return
+    Homework.delete().execute()
+    MYfavor.delete().execute()
+    await bot.send(ev, '已删库')
 
 @sv.on_prefix('上传作业', only_to_me=True)
 async def writehomework(bot, ev: CQEvent):
     msg = ev.message
-    msgs = str(ev.message)
-    matchObj = re.match(r'^([a12345一二三四五])?w?王?(自动|auto|Auto)?(追梦|挂树|春黑)?刀?/([^/]+)/((.|\n|\r)+)$', msgs)
+    msgs = str(ev.raw_message)
+    matchObj = re.match(r'^.*上传作业([a12345一二三四五])?w?王?(自动|auto|Auto)?(追梦|挂树|春黑)?刀?/([^/]+)/((.|\n|\r)+)$', msgs)
     if matchObj is not None:
         bid = matchObj.group(1)
         ifauto = False
