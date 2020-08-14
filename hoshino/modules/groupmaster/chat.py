@@ -189,7 +189,7 @@ async def shejingguanli(bot, ev):
         await bot.send(ev, '还不可以射哦~')
         await util.silence(ev, 30, skip_su=False)
     else:
-        await bot.send(ev, '我来擦干净吧~♪')
+        await bot.send(ev, '我来清理干净吧~♪')
 
 
 @sv.on_fullmatch('啊这')

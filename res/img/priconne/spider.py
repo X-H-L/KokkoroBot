@@ -82,9 +82,9 @@ if __name__ == '__main__':
     spider = Spider()
     # 运行过程出现404和200属正常情况
     #spider.download_icon_unit(start=1001, end=1200, star=3)
-    # spider.download_icon_unit(start=1045, end=1050, star=6)
-    spider.download_icon_unit(start=1133, end=1134, star=3)
-    spider.download_icon_unit(start=1133, end=1134, star=1)
+    spider.download_icon_unit(start=1023, end=1024, star=6)
+    spider.download_icon_unit(start=1134, end=1136, star=3)
+    spider.download_icon_unit(start=1134, end=1136, star=1)
     #spider.download_icon_unit(start=1128, end=1129, star=3)
     #spider.download_icon_unit(start=9000, end=9001, star=0)
     # 如果需要爬取漫画，取消掉下面的这行注释

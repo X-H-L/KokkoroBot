@@ -60,7 +60,7 @@ async def _arena_query(bot, ev: CQEvent, region: int):
         _, name, score = chara.guess_id(unknown)
         if score < 70 and not defen:
             return  # 忽略无关对话
-        msg = f'唔……在下并不记得有叫"{unknown}"的伙伴呢\n有想补充的昵称可以通过[@来杯咖啡]指令登记一下，说清楚是给谁' if score < 70 else f'"唔……{unknown}"？ 请问主人指的是{name}吗（{score}%）'
+        msg = f'唔……在下并不记得有叫"{unknown}"的伙伴呢\n有想补充的昵称可以通过[@来杯咖啡]指令登记一下，说清楚是给谁' if score < 70 else f'唔……“{unknown}”？ 请问主人指的是{name}吗（{score}%）'
         await bot.finish(ev, msg)
     if not defen:
         await bot.finish(ev, '查询请发送"怎么拆+防守队伍"，无需+号', at_sender=True)
