@@ -17,7 +17,7 @@ sv = Service('chat', visible=False)
 # =====================fullmatch======================= #
 
 
-@sv.on_fullmatch(('沙雕机器人', '沙雕機器人', '垃圾机器人', '辣鸡机器人'))
+@sv.on_fullmatch(('沙雕机器人', '垃圾机器人', '辣鸡机器人'))
 async def say_sorry(bot, ev):
     await bot.send(ev, 'ごめんなさい！嘤嘤嘤(>……<)')
     await bot.send(ev, R.img('kkl/》《.jpg').cqcode)
@@ -198,9 +198,9 @@ async def chat_azhe(bot, ev):
     if rtest < 0.1:
         await bot.send(ev, '啊这')
     elif rtest < 0.2:
-        await bot.send(ev, '[CQ:image,file=my\kkl\oxo1.gif]')
+        await bot.send(ev, R.img(f'kkl/oxo1.gif').cqcode)
     elif rtest < 0.4:
-        await bot.send(ev, f'[CQ:image,file=my\kkl\oxo{random.randint(1, 4)}.jpg]')
+        await bot.send(ev, R.img(f'kkl/oxo{random.randint(1, 4)}.jpg').cqcode)
 
 
 @sv.on_fullmatch(('草', '🌿'))

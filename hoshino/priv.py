@@ -64,6 +64,8 @@ def get_user_priv(ev: CQEvent):
                 return NORMAL
             elif role == 'admin':
                 return ADMIN
+            elif role == 'administrator':
+                return ADMIN    # for cqhttpmirai
             elif role == 'owner':
                 return OWNER
         return NORMAL

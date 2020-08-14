@@ -39,7 +39,7 @@ async def rank_sheet(bot, ev):
                        at_sender=True)
         return
     msg = [
-        '\n※表格仅供参考，升r有风险，强化需谨慎',
+        '\n※表格仅供参考，升r有风险，强化需谨慎\n※一切以会长要求为准——',
     ]
     pos = match.group(3)
     if not (pos or is_cn):
@@ -102,13 +102,13 @@ async def pcrfenbubiao(bot, ev):
         await bot.send(ev, R.img('priconne/tips/xueniantuice.jpg').cqcode)
 
 
-@sv.on_fullmatch(('jjc', 'JJC', 'JJC作业', 'JJC作业网', 'JJC数据库', 'jjc作业', 'jjc作业网', 'jjc数据库','JJC作業', 'JJC作業網', 'JJC數據庫', 'jjc作業', 'jjc作業網', 'jjc數據庫'))
-async def furryrank(bot, ev):
+@sv.on_fullmatch(('jjc', 'JJC', 'JJC作业', 'JJC作业网', 'JJC数据库', 'jjc作业', 'jjc作业网', 'jjc数据库'))
+async def say_arina_database(bot, ev):
     await bot.send(ev,'公主连接Re:Dive 竞技场编成数据库\n日文：https://nomae.net/arenadb \n中文：https://pcrdfans.com/battle')
 
 
 @sv.on_fullmatch(('furry', 'furry分级', '喜欢羊驼很怪吗', '喜欢羊驼有多怪'), only_to_me=True)
-async def say_arina_database(bot, ev):
+async def furryrank(bot, ev):
     await bot.send(ev, R.img('priconne/tips/furry.jpg').cqcode)
 
 
@@ -148,8 +148,7 @@ BCR_SITES = f'''
 {OTHER_KEYWORDS}
 ※日台服速查请输入【pcr速查】'''
 
-
-@sv.on_fullmatch(('pcr速查', 'pcr图书馆', 'pcr圖書館', '图书馆', '圖書館'), only_to_me=True)
+@sv.on_fullmatch(('pcr速查', 'pcr图书馆', '图书馆'), only_to_me=True)
 async def pcr_sites(bot, ev: CQEvent):
     await bot.send(ev, PCR_SITES, at_sender=True)
     await util.silence(ev, 60)

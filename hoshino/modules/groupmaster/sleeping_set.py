@@ -18,7 +18,7 @@ sv = Service('sleeping-set', help_='''
 
 svm = Service('sleeping-help', use_priv=priv.ADMIN, manage_priv=priv.PYUSER, visible=False, help_='睡眠管理（？）', bundle='master')
 
-@sv.on_fullmatch(('睡眠套餐', '休眠套餐', '精致睡眠', '来一份精致睡眠套餐', '精緻睡眠', '來一份精緻睡眠套餐'), only_to_me=True)
+@sv.on_fullmatch(('睡眠套餐', '休眠套餐', '精致睡眠', '来一份精致睡眠套餐'), only_to_me=True)
 async def sleep_8h(bot, ev):
     await util.silence(ev, 8*60*60, skip_su=False)
 
@@ -133,4 +133,3 @@ async def notwantsleep(session: CommandSession):
             session.finish('清醒套餐使用成功！')
     else:
         session.finish('唔姆···你好像不在这个群里呢')
-            

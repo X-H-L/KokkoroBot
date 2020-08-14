@@ -1,7 +1,7 @@
 import random
 import hoshino
-from hoshino import Service
-from hoshino.typing import CQEvent, CQHttpError
+from hoshino import Service, util
+from hoshino.typing import CQEvent, CQHttpError, Message
 from PIL import Image, ImageSequence
 sv = Service('random-repeater', help_='随机复读机pro')
 
@@ -34,6 +34,7 @@ async def random_repeater(bot, ev: CQEvent):
                     await _repeater(bot, ev, 0.3)
                 except CQHttpError as e:
                     hoshino.logger.error(f'复读失败: {type(e)}')
+                    hoshino.logger.exception(e)
             else:                      # 概率测试失败，蓄力
                 p = 1 - (1 - p) / PROB_A
                 group_stat[group_id] = (msg, False, p)
@@ -91,7 +92,7 @@ async def _repeater(bot, ev, if_daduan=0):
             else:
                 textcount = 0
                 break
-        msg = str(ev.message)
+        msg = str(util.filt_message(ev.message))
         if textcount == 1:
             if random.random() < 0.05:
                 msg = msg[::-1]
@@ -152,7 +153,7 @@ async def taowabot(bot, ev: CQEvent):
         if (lefttaowa[0] == '《') & (msg[len(msg) - 1] == '》') & (lefttaowa[ltbegin - 1] != '》'):
             msg = msg + '》'
         msg = lefttaowa + msg
-        await bot.send(ev, msg)
+        await bot.send(ev, util.filt_message(msg))
     else:
         lasttaowa[group_id] = ('', 0)
 
