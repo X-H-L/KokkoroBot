@@ -12,8 +12,8 @@ async def showtime(bot, ev):
     minute = now.minute
     hour_str = f' {hour}' if hour < 10 else str(hour)
     minute_str = f' {minute}' if minute < 10 else str(minute)
-    template_path = os.path.join(os.path.dirname(__file__), 'nowtime/template.jpg')
-    save_path = os.path.join(os.path.dirname(__file__), 'nowtime/nowtime.jpg')
+    template_path = os.path.join(os.path.dirname(__file__), 'data/nowtime/template.jpg')
+    save_path = os.path.join(os.path.dirname(__file__), 'data/nowtime/nowtime.jpg')
     add_text(template_path, save_path, f'{hour_str}点{minute_str}分', textsize=95, textfill='black', position=(305, 255))  # 修改此行调整文字大小位置
     '''
     textsize文字大小
@@ -25,7 +25,7 @@ async def showtime(bot, ev):
     reply = f'[CQ:image,file={base64_str}]'
     await bot.send(ev, reply, at_sender=False)
 
-def add_text(template_path, save_path, text: str, textsize: int, font='nowtime/msyh.ttf', textfill='black', position: tuple = (0, 0)):
+def add_text(template_path, save_path, text: str, textsize: int, font='data/nowtime/msyh.ttf', textfill='black', position: tuple = (0, 0)):
     #textsize 文字大小
     #font 字体，默认微软雅黑
     #textfill 文字颜色，默认黑色

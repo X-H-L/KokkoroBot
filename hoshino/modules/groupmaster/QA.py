@@ -17,7 +17,7 @@ sv = Service('QA', manage_priv=priv.ADMIN, enable_on_default=False, help_='''
 每个人每个群数据独立，可以用来存东西（bushi），支持图片
 [不要回答xxx]'''.strip())
 db = pw.SqliteDatabase(
-    os.path.join(os.path.dirname(__file__), 'qa.db')
+    os.path.join(os.path.dirname(__file__), 'data/qa.db')
 )
 
 
@@ -91,7 +91,7 @@ async def handle(bot, context):
             create_time=time.time(),
         ).execute()
         await bot.send(context, f'好的我记住了', at_sender=False)
-        await get_image_from_msg(mssg)
+        #await get_image_from_msg(mssg)
         return
     elif message.startswith('大家问') or message.startswith('有人问'):
         if not priv.check_priv(context, priv.SUPERUSER):
@@ -114,7 +114,7 @@ async def handle(bot, context):
             create_time=time.time(),
         ).execute()
         await bot.send(context, f'好的我记住了', at_sender=False)
-        await get_image_from_msg(mssg)
+        #await get_image_from_msg(mssg)
         return
     elif message.startswith('不要回答'):
         q = context['raw_message'][4:]
@@ -194,7 +194,7 @@ async def answer(bot, context):
 
 
 def init():
-    if not os.path.exists(os.path.join(os.path.dirname(__file__), 'qa.db')):
+    if not os.path.exists(os.path.join(os.path.dirname(__file__), 'data/qa.db')):
         db.connect()
         db.create_tables([Question])
         db.close()

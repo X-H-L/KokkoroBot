@@ -19,7 +19,7 @@ rjz = R.img('priconne/quick/rjz.png').cqcode
 rjh = R.img('priconne/quick/rjh.png').cqcode
 if_b = True
 rba = R.img('priconne/quick/rba.png').cqcode
-jpRankn = '17-5'
+jpRankn = '18-3'
 twRankn = '16-5'
 bRankn = '9-5'
 

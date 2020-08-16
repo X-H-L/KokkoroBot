@@ -1,8 +1,8 @@
 import random
 import re
 import os
-from time import time
 from hoshino import Service
+from hoshino.util import FreqLimiter
 import hoshino
 import json
 from os import path
@@ -12,6 +12,7 @@ sv = Service('random-title', help_='''随机头衔
 '''.strip())
 
 Timecd = 86400  # 这是一天
+_flmt = FreqLimiter(86400)
 last_req = {}
 
 
@@ -89,7 +90,7 @@ def rand_name(length=2):
             b = random.randint(0xa1, 0xfe)
         val = f'{a:x}{b:x}'
         word += bytes.fromhex(val).decode('gb2312')
-    if random.random() < 0.9:
+    if random.random() < 0.99:
         return word
     else:
         return '随机头衔'
@@ -107,13 +108,13 @@ def rand_title():
 
 
 async def check_cd(bot, ev, addcd):
-    global last_req
-    now = time()
-    if(last_req.get(ev.user_id, 0) > now):
-        cd = int(last_req.get(ev.user_id, 0) - now)
+    if ev.user_id in hoshino.config.SUPERUSERS or hoshino.config.PYUSERS:
+        return
+    if not _flmt.check(ev.user_id):
+        cd = int(_flmt.left_time(ev.user_id))
         scd = f'{str(int(cd/3600))}h{str(int((cd%3600)/60))}min{str(int((cd%3600)%60))}s'
         await bot.finish(ev, f'新头衔要好好佩戴哦(cd:{scd})', at_sender=True)
-    last_req[ev.user_id] = now + addcd  # 冷却10000秒
+    _flmt.start_cd(ev.user_id, addcd)
 
 
 async def check_is_owner(bot, ev):
@@ -127,7 +128,7 @@ async def check_is_owner(bot, ev):
         return False
 
 
-josnpath = os.path.join(os.path.dirname(__file__), 'pohailist.json')
+josnpath = os.path.join(os.path.dirname(__file__), 'data/pohailist.json')
 if not path.exists(josnpath):
     content = '''{
     "1111111": []

@@ -23,3 +23,4 @@ peewee~=3.13
 expiringdict>=1.2.0
 quart>=0.6.15
 jinja2~=2.10
+filetype==1.0.7

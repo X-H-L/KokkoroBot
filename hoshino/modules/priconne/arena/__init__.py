@@ -20,6 +20,9 @@ from . import arena
 
 lmt = FreqLimiter(5)
 
+sorrypic = R.img('kkl/》《.jpg').cqcode
+sorrypicgif = R.img('kkl/》《.gif').cqcode
+
 aliases = ('怎么拆', '怎么解', '怎么打', '如何拆', '如何解', '如何打', 'jjc查询')
 aliases_b = tuple('b' + a for a in aliases) + tuple('B' + a for a in aliases)
 aliases_tw = tuple('台' + a for a in aliases)
@@ -48,7 +51,7 @@ async def _arena_query(bot, ev: CQEvent, region: int):
     uid = ev.user_id
 
     if not lmt.check(uid):
-        await bot.finish(ev, '主人您查询得太快了，在下已经跟不上了><\n[CQ:image,file=my\kkl\》《.jpg]', at_sender=True)
+        await bot.finish(ev, f'主人您查询得太快了，在下已经跟不上了><\n{sorrypicgif}', at_sender=True)
     lmt.start_cd(uid)
 
     # 处理输入数据
@@ -82,9 +85,9 @@ async def _arena_query(bot, ev: CQEvent, region: int):
 
     # 处理查询结果
     if res is None:
-        await bot.finish(ev, '查询出错，请联系维护组调教><\n[CQ:image,file=my\kkl\》《.jpg]\n请先移步pcrdfans.com进行查询', at_sender=True)
+        await bot.finish(ev, f'查询出错，请联系维护组调教><\n{sorrypicgif}\n请先移步pcrdfans.com进行查询', at_sender=True)
     if not len(res):
-        await bot.finish(ev, '抱歉没有查询到解法><\n[CQ:image,file=my\kkl\》《.jpg]\n※没有作业说明随便拆 发挥你的想象力～★\n作业上传请前往pcrdfans.com', at_sender=True)
+        await bot.finish(ev, '抱歉没有查询到解法><\n{sorrypic}\n※没有作业说明随便拆 发挥你的想象力～★\n作业上传请前往pcrdfans.com', at_sender=True)
     res = res[:min(6, len(res))]    # 限制显示数量，截断结果
 
     # 发送回复

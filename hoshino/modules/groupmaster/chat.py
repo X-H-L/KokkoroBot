@@ -1,5 +1,7 @@
 import random
-
+import requests
+import pytz
+from datetime import datetime
 from nonebot import on_command, CommandSession
 
 from hoshino import R, Service, priv, util
@@ -12,7 +14,7 @@ async def say_hello(session):
 
 
 sv = Service('chat', visible=False)
-
+tz = pytz.timezone('Asia/Shanghai')
 
 # =====================fullmatch======================= #
 
@@ -20,7 +22,7 @@ sv = Service('chat', visible=False)
 @sv.on_fullmatch(('沙雕机器人', '垃圾机器人', '辣鸡机器人'))
 async def say_sorry(bot, ev):
     await bot.send(ev, 'ごめんなさい！嘤嘤嘤(>……<)')
-    await bot.send(ev, R.img('kkl/》《.jpg').cqcode)
+    await bot.send(ev, R.img('kkl/》《.gif').cqcode)
 
 
 @sv.on_fullmatch(('老婆', 'waifu', 'laopo'), only_to_me=True)
@@ -98,6 +100,21 @@ async def chat_gaishuile(bot, ev):
 @sv.on_fullmatch(('会战警察来了'))
 async def chat_huizhanjingcha(bot, ev):
     await bot.send(ev, R.img(f'geng/会战警察{random.randint(1, 3)}.jpg').cqcode)
+
+
+@sv.on_fullmatch(('上号', '网抑云时间'))
+async def music163_sentences(bot, ev):
+    now = datetime.now(tz)
+    if not (0 <= now.hour <= 1):
+        await bot.send(ev, '还没到点呢')
+        return
+    resp = requests.get('http://api.heerdev.top/nemusic/random', timeout=5)
+    if resp.status_code == requests.codes.ok:
+        res = resp.json()
+        sentences = res['text']
+        await bot.send(ev, sentences)
+    else:
+        await bot.send(ev, '上号失败，我很抱歉。查询出错，请稍后重试。')
 
 
 @sv.on_fullmatch(('xp调查', 'xp调研'), only_to_me=True)

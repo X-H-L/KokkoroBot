@@ -1,11 +1,14 @@
 import random
 import hoshino
+import requests
+import io
+import os
 from hoshino import Service, util
 from hoshino.typing import CQEvent, CQHttpError, Message
 from PIL import Image, ImageSequence
 sv = Service('random-repeater', help_='随机复读机pro')
 
-PROB_A = 1.5
+PROB_A = 1.4
 group_stat = {}     # group_id: (last_msg, is_repeated, p)
 
 '''
@@ -19,16 +22,17 @@ a 设为一个略大于1的小数，最好不要超过2，建议1.6
 @sv.on_message()
 async def random_repeater(bot, ev: CQEvent):
     group_id = ev.group_id
-    msg = str(ev.message)
+    msg = ev.message
 
     if group_id not in group_stat:
         group_stat[group_id] = (msg, False, 0)
         return
 
     last_msg, is_repeated, p = group_stat[group_id]
-    if last_msg == msg:     # 群友正在复读
+    if check_repeater(last_msg, msg):     # 群友正在复读   
         if not is_repeated:     # 机器人尚未复读过，开始测试复读
-            if random.random() < p+0.0001:    # 概率测试通过，复读并设flag
+            hoshino.logger.debug(f"{group_id} 群友正在复读，当前参与概率：{p}")
+            if random.random() < p:    # 概率测试通过，复读并设flag
                 try:
                     group_stat[group_id] = (msg, True, 0)
                     await _repeater(bot, ev, 0.3)
@@ -38,11 +42,12 @@ async def random_repeater(bot, ev: CQEvent):
             else:                      # 概率测试失败，蓄力
                 p = 1 - (1 - p) / PROB_A
                 group_stat[group_id] = (msg, False, p)
+        else:
+            hoshino.logger.debug(f"{group_id} 群友还在复读")
     else:   # 不是复读，重置
         if random.random() < 0.0001:
-            if random.random() < 0.5:
-                await bot.send(ev, msg)
-                group_stat[group_id] = (msg, True, 0)
+            await bot.send(ev, str(msg))
+            group_stat[group_id] = (msg, True, 0)
         else:
             group_stat[group_id] = (msg, False, 0)
 
@@ -58,32 +63,55 @@ def _test_a(a):
         print(p0)
 
 
+def check_repeater(lastmsg, msg):
+    if str(lastmsg) == str(msg):
+        return True
+    else:
+        lenth = len(lastmsg)
+        if lenth == len(msg):
+            for i in range(lenth):
+                if lastmsg[i]['type'] != msg[i]['type']:
+                    return False
+                elif lastmsg[i]['type'] == 'image':
+                    if lastmsg[i]['data']['file'] != msg[i]['data']['file']:
+                        return False
+                else:
+                    if lastmsg[i]['data'] != msg[i]['data']:
+                        return False
+            return True
+    return False
+
+
 async def _repeater(bot, ev, if_daduan=0):
     if random.random() < if_daduan:
         await bot.send(ev, '不许复读！')
+        hoshino.logger.debug(f"{ev.group_id} 打断了一次复读")
         return
     imgcount = 0
     for i in ev.message:
         if i['type'] == 'image':
-            img = i['data']['file']
+            img = i['data']['url']
+            imgname = i['data']['file']
             imgcount += 1
         else:
             imgcount = 0
             break
     if imgcount == 1:
-        imageget = await bot.get_image(file=img)
-        imgpath = imageget['file']
-        image = Image.open(imgpath)
+        image = Image.open(io.BytesIO(requests.get(img, timeout=20).content))
+        imgpath = os.path.join(os.path.dirname(__file__), f'data\\repeater\\{imgname}')
         turnAround = random.randint(0, 6)
         if image.format == 'GIF':
+            imgpath += '.gif'
             if image.is_animated:
                 frames = [f.transpose(turnAround).copy() for f in ImageSequence.Iterator(image)]
-                if random.random() < 0.2:
+                if random.random() < 0.5:
                     frames.reverse() # 内置列表倒序方法
                 frames[0].save(imgpath, save_all=True, append_images=frames[1:])
         else:
+            imgpath += '.jpg'
             image.transpose(turnAround).save(imgpath)
-        await bot.send(ev, f'[CQ:image,file={img}]')
+        await bot.send(ev, f'[CQ:image,file=file:///{imgpath}]')
+        hoshino.logger.debug(f"{ev.group_id} 对单图片进行了特殊复读")
     else:
         textcount = 0
         for i in ev.message:
@@ -101,11 +129,12 @@ async def _repeater(bot, ev, if_daduan=0):
                 random.shuffle(lmsg)
                 msg = ''.join(lmsg)
         await bot.send(ev, msg)
+        hoshino.logger.debug(f"{ev.group_id} 进行了一次复读")
 
 
 NOTAOWA_WORD = (
     'bili', 'Bili', 'BILI', '哔哩', '啤梨', 'mu', 'pili', 'dili',
-    '是不', '批里', 'nico', '滴哩', 'BiLi', '不会吧', ''
+    '是不', '批里', 'nico', '滴哩', 'BiLi', '不会吧', '20'
 )
 
 lasttaowa = {}

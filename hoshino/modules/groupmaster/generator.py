@@ -61,7 +61,7 @@ async def yxh(bot, ev: CQEvent):
 
 @sv.on_prefix(('狗屁不通'))
 async def gpbt(bot, ev: CQEvent):
-    data = load_config(os.path.join(os.path.dirname(__file__),'generator/data.json'))
+    data = load_config(os.path.join(os.path.dirname(__file__),'data/generator/data.json'))
     title = ev.message.extract_plain_text().strip()
     length = 500
     body = ""
@@ -82,9 +82,9 @@ async def gpbt(bot, ev: CQEvent):
 async def jc(bot, ev: CQEvent):
     kw = ev.message.extract_plain_text().strip()
     arr = kw.split('/')
-    image = Image.open(os.path.join(os.path.dirname(__file__),'generator/jichou.jpg'))
+    image = Image.open(os.path.join(os.path.dirname(__file__),'data/generator/jichou.jpg'))
     # 创建Font对象:
-    font = ImageFont.truetype(os.path.join(os.path.dirname(__file__),'generator/simhei.ttf'), 80)
+    font = ImageFont.truetype(os.path.join(os.path.dirname(__file__),'data/generator/simhei.ttf'), 80)
     
     time = datetime.datetime.now().strftime('%Y年%m月%d日')
     msg = f'{time}，{arr[0]}，{arr[1]}，这个仇我先记下了'
@@ -115,7 +115,7 @@ async def friend(bot, ev: CQEvent):
         if not _flmt.check(ev.user_id):
             return
         _flmt.start_cd(ev.user_id)
-    data = load_config(os.path.join(os.path.dirname(__file__),'generator/config.json'))
+    data = load_config(os.path.join(os.path.dirname(__file__),'data/generator/config.json'))
     #data = data['friend']
     arr = []
     is_at = False
@@ -146,8 +146,8 @@ async def friend(bot, ev: CQEvent):
     img_origin.paste(image, (0, 0), alpha_layer)
 
     # 创建Font对象:
-    font = ImageFont.truetype(os.path.join(os.path.dirname(__file__),'generator/simhei.ttf'), 30)
-    font2 = ImageFont.truetype(os.path.join(os.path.dirname(__file__),'generator/simhei.ttf'), 25)
+    font = ImageFont.truetype(os.path.join(os.path.dirname(__file__),'data/generator/simhei.ttf'), 30)
+    font2 = ImageFont.truetype(os.path.join(os.path.dirname(__file__),'data/generator/simhei.ttf'), 25)
     
     # 创建Draw对象:
     image_text = Image.new('RGB', (450, 150), (255, 255, 255))
