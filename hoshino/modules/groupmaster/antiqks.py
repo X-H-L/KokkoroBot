@@ -1,6 +1,6 @@
 import aiohttp
 from hoshino import R, Service, util
-
+import re
 sv = Service('antiqks', help_='识破骑空士的阴谋')
 
 qks_url = ["granbluefantasy.jp"]
@@ -15,9 +15,10 @@ async def qks_keyword(bot, ev):
 # 有潜在的安全问题
 @sv.on_rex(r'[a-zA-Z0-9\.]{4,12}\/[a-zA-Z0-9]+')
 async def qks_rex(bot, ev):
-    match = ev.match
+    msg = str(ev.raw_message)
+    matchObj = re.search(r'[a-zA-Z0-9\.]{4,12}\/[a-zA-Z0-9]+', msg)
     msg = f'骑空士爪巴远点\n{qksimg}'
-    res = 'http://'+match.group(0)
+    res = 'http://'+matchObj.group(0)
     async with aiohttp.TCPConnector(verify_ssl=False) as connector:
         async with aiohttp.request(
             'GET',

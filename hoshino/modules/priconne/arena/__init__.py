@@ -22,6 +22,7 @@ lmt = FreqLimiter(5)
 
 sorrypic = R.img('kkl/》《.jpg').cqcode
 sorrypicgif = R.img('kkl/》《.gif').cqcode
+jjcerror = R.img('jjcerror.jpg').cqcode
 
 aliases = ('怎么拆', '怎么解', '怎么打', '如何拆', '如何解', '如何打', 'jjc查询')
 aliases_b = tuple('b' + a for a in aliases) + tuple('B' + a for a in aliases)
@@ -45,8 +46,9 @@ async def arena_query_jp(bot, ev):
     await _arena_query(bot, ev, region=4)
 
 
-async def _arena_query(bot, ev: CQEvent, region: int):
 
+async def _arena_query(bot, ev: CQEvent, region: int):
+    #await bot.finish(ev, f'{jjcerror}\n站长把key回收了，功能暂时无法使用，请自行去网站查询\n公主连接Re:Dive 竞技场编成数据库\n日文：https://nomae.net/arenadb \n中文：https://pcrdfans.com/battle', at_sender=True)
     arena.refresh_quick_key_dic()
     uid = ev.user_id
 
@@ -87,7 +89,7 @@ async def _arena_query(bot, ev: CQEvent, region: int):
     if res is None:
         await bot.finish(ev, f'查询出错，请联系维护组调教><\n{sorrypicgif}\n请先移步pcrdfans.com进行查询', at_sender=True)
     if not len(res):
-        await bot.finish(ev, '抱歉没有查询到解法><\n{sorrypic}\n※没有作业说明随便拆 发挥你的想象力～★\n作业上传请前往pcrdfans.com', at_sender=True)
+        await bot.finish(ev, f'抱歉没有查询到解法><\n{sorrypic}\n※没有作业说明随便拆 发挥你的想象力～★\n作业上传请前往pcrdfans.com', at_sender=True)
     res = res[:min(6, len(res))]    # 限制显示数量，截断结果
 
     # 发送回复

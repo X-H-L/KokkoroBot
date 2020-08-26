@@ -30,7 +30,7 @@ JEWEL_EXCEED_NOTICE = f'主人今天已经抽过{jewel_limit.max}钻了，欢迎
 TENJO_EXCEED_NOTICE = f'主人今天已经抽过{tenjo_limit.max}张天井券了，欢迎明早5点后再来！'
 FAIL_LIST = [
     f'抽卡被宫子拦住了！\n{R.img("priconne/gachafail/buding.jpg").cqcode}',
-    f'主さま,花凛小姐有事不在\n{R.img("priconne/gachafail/kkl.jpg").cqcode}',
+    f'主さま,花凛小姐有事不在\n{R.img("priconne/gachafail/kkl.gif").cqcode}',
     f'奇怪的东西混进了卡池！\n{R.img(f"priconne/gachafail/jojo{random.randint(1, 2)}.gif").cqcode}',
     f'触发了奇怪的动画！\n{R.img("priconne/gachafail/naoyixue.gif").cqcode}',
     '为什么会失败呢？原因征集中！有好玩的脑洞请告诉蓝红心！',

@@ -20,8 +20,8 @@ rjh = R.img('priconne/quick/rjh.png').cqcode
 if_b = True
 rba = R.img('priconne/quick/rba.png').cqcode
 jpRankn = '18-3'
-twRankn = '16-5'
-bRankn = '9-5'
+twRankn = '17-3'
+bRankn = '10-3'
 
 ATIP='※建议加入前中后精准定位，eg：#台前rank'
 @sv.on_rex(r'^(\*?([日台国陆b])服?([前中后]*)卫?)?rank(表|推荐|指南)?$', only_to_me=True)

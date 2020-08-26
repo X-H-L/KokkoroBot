@@ -81,6 +81,8 @@ async def no_pohai(bot, ev):
 
 
 def rand_name(length=2):
+    if random.random() < 0.4:
+        return '随机头衔'
     word = ''
     for _ in range(length):
         a = random.randint(0xb0, 0xd7)
@@ -90,15 +92,18 @@ def rand_name(length=2):
             b = random.randint(0xa1, 0xfe)
         val = f'{a:x}{b:x}'
         word += bytes.fromhex(val).decode('gb2312')
-    if random.random() < 0.99:
-        return word
-    else:
-        return '随机头衔'
+    return word
 
 
 def rand_title():
     r = random.random()
-    if r < 0.9:
+    if r < 0.8:
+        data = load_config(datapath)
+        title = random.choice(data["partA"]) + random.choice(
+            data["partB"]) + random.choice(data["partC"]) + random.choice(
+                data["partD"])
+        return title
+    elif r < 0.9:
         length = 2
     elif r < 0.99:
         length = 3
@@ -129,6 +134,7 @@ async def check_is_owner(bot, ev):
 
 
 josnpath = os.path.join(os.path.dirname(__file__), 'data/pohailist.json')
+datapath = os.path.join(os.path.dirname(__file__), 'data/random_title.json')
 if not path.exists(josnpath):
     content = '''{
     "1111111": []
@@ -147,16 +153,16 @@ def save_config(config: dict):
         return False
 
 
-def load_config():
+def load_config(path):
     try:
-        with open(josnpath, 'r', encoding='utf8') as f:
+        with open(path, 'r', encoding='utf8') as f:
             config = json.load(f)
             return config
     except:
         return {}
 
 
-pohailist = load_config()  # 读列表
+pohailist = load_config(josnpath)  # 读列表
 
 
 def pohaiadd(group_id, user_id):  # 加入迫害列表
